@@ -1,0 +1,13 @@
+dosya,motor,etiket,run,kaynak_dosya,pencere,gecerli,rms_mag_ort_mg,rms_mag_std_mg,crest_ort,sensor_araligi,motor_kaynagi,kullanim,not
+pencere_normal_mA_r8_20261021_125011.csv,A,normal,8,pencere_normal_mA_r8_20261021_125011.csv,59,59,248.1,5.6,1.88,+-4g,logger_etiketi,egitim_test,"Ayni run 8 icin 12:48 kaydi da var (tekrar, kullanilmiyor)."
+pencere_dengesiz_mA_r2_20261021_113139.csv,A,dengesiz,2,pencere_dengesiz_r2_20261021_113139.csv,59,59,1443.5,16.9,1.45,+-4g,kullanici_notu,egitim_test,Kayit sirasinda --motor etiketi yoktu; motor A kullanici notuna gore.
+pencere_normal_mB_r4_20261021_120759.csv,B,normal,4,pencere_normal_r4_20261021_120759.csv,58,58,264.5,23.1,1.93,+-4g,kullanici_notu,egitim_test,"Kayit sirasinda --motor etiketi yoktu. Motor B kullanici el notuna gore; 12:29'da A demisti, notu esas alindi. Pencere-pencere oynaklik yuksek (std ~23 mg)."
+pencere_dengesiz_mB_r7_20261021_124225.csv,B,dengesiz,7,pencere_dengesiz_mB_r7_20261021_124225.csv,59,59,1556.1,3.7,1.47,+-4g,logger_etiketi,egitim_test,Bant: motor A dengesizindekiyle ayni olmasi hedeflendi.
+pencere_normal_r1_20261021_100255.csv,,,,pencere_normal_r1_20261021_100255.csv,,,,,,,,haric,eski +-2 g ayari; kirpilma suphesi ve farkli olcek
+pencere_dengesiz_r2_20261021_110052.csv,,,,pencere_dengesiz_r2_20261021_110052.csv,,,,,,,,haric,eski +-2 g; 755 tekrar eden satir iceriyor
+pencere_dengesiz_r2_20261021_110319.csv,,,,pencere_dengesiz_r2_20261021_110319.csv,,,,,,,,haric,eski +-2 g ayari
+pencere_normal_r1_20261021_114227.csv,,,,pencere_normal_r1_20261021_114227.csv,,,,,,,,haric,"ek normal (motor A, kullanici ifadesine gore); run 1"
+pencere_normal_r11_20261021_114619.csv,,,,pencere_normal_r11_20261021_114619.csv,,,,,,,,haric,run 1'in ayni montajda tekrari; bagimsiz degil
+pencere_normal_r4_20261021_120233.csv,,,,pencere_normal_r4_20261021_120233.csv,,,,,,,,haric,run 4'un ilk denemesi (r4_120759 ile ayni montaj); tekrar
+pencere_normal_mA_r8_20261021_124848.csv,,,,pencere_normal_mA_r8_20261021_124848.csv,,,,,,,,haric,run 8'in ilk denemesi; tekrar
+pencere_test_sabit_r0_*.csv / test_motor_acik_r0,,,,pencere_test_sabit_r0_*.csv / test_motor_acik_r0,,,,,,,,haric,motor kapali / pilot test kayitlari; sinif verisi degil

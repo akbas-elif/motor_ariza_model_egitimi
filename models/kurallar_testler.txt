@@ -1,0 +1,47 @@
+### T1: baseline [rms_mag] d1
+|--- rms_mag_ug <= 811790.50
+|   |--- class: 0
+|--- rms_mag_ug >  811790.50
+|   |--- class: 1
+
+### T1: agac [rms_mag+crest] d2
+|--- crest_x1000 <= 1682.50
+|   |--- class: 1
+|--- crest_x1000 >  1682.50
+|   |--- class: 0
+
+### T2: baseline [rms_mag] d1
+|--- rms_mag_ug <= 928756.50
+|   |--- class: 0
+|--- rms_mag_ug >  928756.50
+|   |--- class: 1
+
+### T2: agac [rms_mag+crest] d2
+|--- crest_x1000 <= 1522.00
+|   |--- class: 1
+|--- crest_x1000 >  1522.00
+|   |--- class: 0
+
+### T3: baseline [rms_mag] d1
+|--- rms_mag_ug <= 838154.50
+|   |--- class: 0
+|--- rms_mag_ug >  838154.50
+|   |--- class: 1
+
+### T3: agac [rms_mag+crest] d2
+|--- rms_mag_ug <= 838154.50
+|   |--- class: 0
+|--- rms_mag_ug >  838154.50
+|   |--- class: 1
+
+### T4: baseline [rms_mag] d1
+|--- rms_mag_ug <= 902392.50
+|   |--- class: 0
+|--- rms_mag_ug >  902392.50
+|   |--- class: 1
+
+### T4: agac [rms_mag+crest] d2
+|--- crest_x1000 <= 1664.00
+|   |--- class: 1
+|--- crest_x1000 >  1664.00
+|   |--- class: 0
