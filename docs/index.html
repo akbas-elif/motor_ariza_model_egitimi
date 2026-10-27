@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motor Titreşim İzleme</title>
+<style>
+  :root {
+    --yuzey: #fcfcfb; --sayfa: #f9f9f7; --kart: #ffffff;
+    --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --eksen: #c3c2b7; --cizgi: rgba(11,11,11,0.10);
+    --seri: #2a78d6;
+    --iyi: #0ca30c; --uyari: #fab219; --kritik: #d03b3b; --notr: #898781;
+    --iyi-zemin: #e7f6e7; --uyari-zemin: #fff4dc; --kritik-zemin: #fbe7e7; --notr-zemin: #f0efec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --yuzey: #1a1a19; --sayfa: #0d0d0d; --kart: #1a1a19;
+      --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --eksen: #383835; --cizgi: rgba(255,255,255,0.10);
+      --seri: #3987e5;
+      --iyi-zemin: #10260f; --uyari-zemin: #2d2410; --kritik-zemin: #2d1414; --notr-zemin: #262624;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--sayfa); color: var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 20px 16px 40px; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+  h1 { font-size: 20px; margin: 0; }
+  .alt { color: var(--ink2); font-size: 13px; }
+  .rozetler { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rozet { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--cizgi);
+           background: var(--kart); color: var(--ink2); display: inline-flex; gap: 6px; align-items: center; }
+  .nokta { width: 8px; height: 8px; border-radius: 50%; background: var(--notr); }
+  .grid { display: grid; grid-template-columns: 320px 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 12px; padding: 16px; }
+  .kart h2 { font-size: 13px; font-weight: 600; color: var(--ink2); margin: 0 0 12px; }
+  #durumKart { display: flex; flex-direction: column; gap: 10px; }
+  #durumKutu { border-radius: 10px; padding: 18px 16px; background: var(--notr-zemin);
+               display: flex; align-items: center; gap: 14px; }
+  #durumIkon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+               font-size: 24px; font-weight: 700; color: #fff; background: var(--notr); flex: none; }
+  #durumAd { font-size: 24px; font-weight: 700; }
+  #durumAciklama { font-size: 13px; color: var(--ink2); }
+  .olcu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .olcu div { background: var(--sayfa); border-radius: 8px; padding: 10px; }
+  .olcu b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+  .olcu span { font-size: 12px; color: var(--muted); }
+  svg { width: 100%; height: auto; display: block; }
+  .ekseny, .eksenx { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .esikyazi { font-size: 11px; fill: var(--ink2); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--cizgi); }
+  th:first-child, td:first-child, th:last-child, td:last-child { text-align: left; }
+  th { color: var(--ink2); font-weight: 600; }
+  .tablo-kap { overflow-x: auto; }
+  .etiket { display: inline-flex; align-items: center; gap: 6px; }
+  .etiket i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  footer { margin-top: 16px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  #ipucu { position: fixed; pointer-events: none; background: var(--kart); border: 1px solid var(--cizgi);
+           border-radius: 8px; padding: 6px 8px; font-size: 12px; color: var(--ink); display: none;
+           box-shadow: 0 2px 8px rgba(0,0,0,.12); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Motor Titreşim İzleme</h1>
+      <div class="alt">STM32F407 + GY-521 · pencere başına durum sınıflandırma (1024 örnek, 1 kHz)</div>
+    </div>
+    <div class="rozetler">
+      <span class="rozet" id="brokerRozet"><span class="nokta" id="brokerNokta"></span><span id="brokerYazi">Sunucuya bağlanılıyor…</span></span>
+      <span class="rozet" id="cihazRozet"><span class="nokta" id="cihazNokta"></span><span id="cihazYazi">Cihaz: bilinmiyor</span></span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="kart" id="durumKart" aria-live="polite">
+      <h2>Anlık durum (son 5 pencerenin oyu)</h2>
+      <div id="durumKutu">
+        <div id="durumIkon">?</div>
+        <div>
+          <div id="durumAd">Veri bekleniyor</div>
+          <div id="durumAciklama">Henüz pencere gelmedi.</div>
+        </div>
+      </div>
+      <div class="olcu">
+        <div><span>rms_mag</span><b id="rmsDeger">–</b></div>
+        <div><span>tepe (peak)</span><b id="peakDeger">–</b></div>
+        <div><span>crest faktörü</span><b id="crestDeger">–</b></div>
+        <div><span>son pencere</span><b id="sonDeger">–</b></div>
+      </div>
+    </section>
+
+    <section class="kart">
+      <h2>rms_mag geçmişi, mg (son 120 pencere, log ölçek) ve model eşikleri</h2>
+      <svg id="grafik" viewBox="0 0 640 300" role="img" aria-label="rms_mag zaman grafiği"></svg>
+      <div class="alt" id="grafikNot" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px">
+        <span>Nokta rengi = o pencerenin ham tahmini:</span>
+        <span class="etiket"><i style="background:var(--iyi);border-radius:50%"></i>Normal</span>
+        <span class="etiket"><i style="background:var(--uyari);border-radius:50%"></i>Orta bozuk</span>
+        <span class="etiket"><i style="background:var(--kritik);border-radius:50%"></i>Çok bozuk</span>
+      </div>
+    </section>
+  </div>
+
+  <section class="kart" style="margin-top:16px">
+    <h2>Son pencereler</h2>
+    <div class="tablo-kap">
+      <table>
+        <thead><tr><th>Saat</th><th>seq</th><th>rms_mag (mg)</th><th>peak (mg)</th><th>crest</th><th>hata</th><th>Durum</th></tr></thead>
+        <tbody id="tablo"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Eşikler: normal &lt; 21,8 mg ≤ orta bozuk &lt; 119,8 mg ≤ çok bozuk (STM32'deki model ile aynı).
+    Sınıflandırma kartın üzerinde yapılır; bu sayfa yalnızca sonucu gösterir.<br>
+    Demo: aynı tip iki motorla eğitildi, kör test yapılmadı. Veri herkese açık bir test sunucusundan (broker.emqx.io) geçer; kişisel bilgi gönderilmez.
+    <span id="sayaclar"></span>
+  </footer>
+</main>
+<div id="ipucu"></div>
+
+<script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+<script>
+(function () {
+  const BROKER = "wss://broker.emqx.io:8084/mqtt";
+  const TOPIC_T = "akbaselif/motor-f407-a91c7e/telemetry";
+  const TOPIC_S = "akbaselif/motor-f407-a91c7e/status";
+  const ESIK1 = 21.844, ESIK2 = 119.839;      // mg, STM32 ile ayni
+  const MAKS = 120;
+  const BAYAT_MS = 5000;                      // 5 s veri gelmezse "veri yok"
+
+  const DURUM = {
+    normal:       { ad: "Normal",       ikon: "✓", renk: "var(--iyi)",    zemin: "var(--iyi-zemin)",    acik: "Titreşim normal düzeyde." },
+    orta_bozuk:   { ad: "Orta bozuk",   ikon: "!", renk: "var(--uyari)",  zemin: "var(--uyari-zemin)",  acik: "Dengesizlik belirtisi (2 karton düzeyi)." },
+    cok_bozuk:    { ad: "Çok bozuk",    ikon: "✕", renk: "var(--kritik)", zemin: "var(--kritik-zemin)", acik: "Güçlü dengesizlik (somun düzeyi). Motoru durdurun." },
+    belirsiz:     { ad: "Belirsiz",     ikon: "…", renk: "var(--notr)",   zemin: "var(--notr-zemin)",   acik: "Oylama için 5 pencere bekleniyor." },
+    olcum_hatasi: { ad: "Ölçüm hatası", ikon: "?", renk: "var(--notr)",   zemin: "var(--notr-zemin)",   acik: "Sensör/I2C hatası; pencere geçersiz." }
+  };
+  const KOD_AD = { "-1": "belirsiz", "0": "normal", "1": "orta_bozuk", "2": "cok_bozuk" };
+
+  const $ = (id) => document.getElementById(id);
+  const gecmis = [];
+  let sonMesajZamani = 0;
+
+  function mg(ug) { return ug / 1000; }
+  function fmt(v) { return v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2); }
+  function saat(t) { return new Date(t).toLocaleTimeString("tr-TR"); }
+
+  function rozet(noktaId, yaziId, renk, yazi) {
+    $(noktaId).style.background = renk; $(yaziId).textContent = yazi;
+  }
+
+  function durumGoster(anahtar) {
+    const d = DURUM[anahtar] || DURUM.belirsiz;
+    $("durumKutu").style.background = d.zemin;
+    $("durumIkon").style.background = d.renk;
+    $("durumIkon").textContent = d.ikon;
+    $("durumAd").textContent = d.ad;
+    $("durumAciklama").textContent = d.acik;
+  }
+
+  function mesajIsle(m) {
+    const t = Date.now();
+    sonMesajZamani = t;
+    const kayit = {
+      t, seq: m.seq, rms: mg(m.rms_mag_ug), peak: mg(m.peak_ug), crest: m.crest,
+      hata: (m.ov || 0) + (m.err || 0),
+      tahmin: KOD_AD[String(m.tahmin)] || "belirsiz",
+      durum: m.durum || KOD_AD[String(m.durum_kodu)] || "belirsiz"
+    };
+    gecmis.push(kayit);
+    if (gecmis.length > MAKS) gecmis.shift();
+
+    durumGoster(kayit.durum);
+    $("rmsDeger").textContent = fmt(kayit.rms) + " mg";
+    $("peakDeger").textContent = fmt(kayit.peak) + " mg";
+    $("crestDeger").textContent = kayit.crest.toFixed(2);
+    $("sonDeger").textContent = "#" + kayit.seq;
+    tabloCiz(); grafikCiz();
+  }
+
+  function tabloCiz() {
+    const satirlar = gecmis.slice(-10).reverse().map(k => {
+      const d = DURUM[k.durum] || DURUM.belirsiz;
+      return `<tr><td>${saat(k.t)}</td><td>${k.seq}</td><td>${fmt(k.rms)}</td><td>${fmt(k.peak)}</td>` +
+             `<td>${k.crest.toFixed(2)}</td><td>${k.hata}</td>` +
+             `<td><span class="etiket"><i style="background:${d.renk}"></i>${d.ad}</span></td></tr>`;
+    });
+    $("tablo").innerHTML = satirlar.join("");
+  }
+
+  // --- grafik (SVG, log y) ---
+  const W = 640, H = 300, SOL = 52, SAG = 12, UST = 12, ALT = 28;
+  const YMIN = 5, YMAX = 1000;
+  const yP = (v) => { const a = Math.log10(YMIN), b = Math.log10(YMAX);
+    const c = Math.min(Math.max(Math.log10(Math.max(v, YMIN)), a), b);
+    return UST + (H - UST - ALT) * (1 - (c - a) / (b - a)); };
+  const xP = (i) => SOL + (W - SOL - SAG) * (i / (MAKS - 1));
+
+  function grafikCiz() {
+    const s = [];
+    [5, 10, 20, 50, 100, 200, 500, 1000].forEach(v => {
+      const y = yP(v);
+      s.push(`<line x1="${SOL}" x2="${W - SAG}" y1="${y}" y2="${y}" stroke="var(--grid)" stroke-width="1"/>`);
+      s.push(`<text class="ekseny" x="${SOL - 6}" y="${y + 4}" text-anchor="end">${v}</text>`);
+    });
+    [[ESIK1, "eşik 1: 21,8 mg"], [ESIK2, "eşik 2: 119,8 mg"]].forEach(([v, ad]) => {
+      const y = yP(v);
+      s.push(`<line x1="${SOL}" x2="${W - SAG}" y1="${y}" y2="${y}" stroke="var(--ink2)" stroke-width="1" stroke-dasharray="4 3"/>`);
+      s.push(`<text class="esikyazi" x="${W - SAG - 4}" y="${y - 5}" text-anchor="end">${ad}</text>`);
+    });
+    s.push(`<line x1="${SOL}" x2="${W - SAG}" y1="${H - ALT}" y2="${H - ALT}" stroke="var(--eksen)"/>`);
+    s.push(`<text class="eksenx" x="${SOL}" y="${H - 8}">eski</text><text class="eksenx" x="${W - SAG}" y="${H - 8}" text-anchor="end">yeni →</text>`);
+    const off = MAKS - gecmis.length;
+    if (gecmis.length > 1) {
+      const pts = gecmis.map((k, i) => `${xP(i + off).toFixed(1)},${yP(k.rms).toFixed(1)}`).join(" ");
+      s.push(`<polyline points="${pts}" fill="none" stroke="var(--seri)" stroke-width="2" stroke-linejoin="round"/>`);
+    }
+    gecmis.forEach((k, i) => {
+      const d = DURUM[k.tahmin] || DURUM.belirsiz;
+      s.push(`<circle data-i="${i}" cx="${xP(i + off).toFixed(1)}" cy="${yP(k.rms).toFixed(1)}" r="4" fill="${d.renk}" stroke="var(--yuzey)" stroke-width="2"/>`);
+    });
+    // genis gorunmez isabet alani (ipucu icin)
+    gecmis.forEach((k, i) => {
+      s.push(`<rect data-i="${i}" x="${(xP(i + off) - 3).toFixed(1)}" y="${UST}" width="6" height="${H - UST - ALT}" fill="transparent"/>`);
+    });
+    $("grafik").innerHTML = s.join("");
+  }
+
+  const ipucu = $("ipucu");
+  $("grafik").addEventListener("mousemove", (e) => {
+    const i = e.target.getAttribute && e.target.getAttribute("data-i");
+    if (i === null || i === undefined) { ipucu.style.display = "none"; return; }
+    const k = gecmis[+i]; if (!k) return;
+    const d = DURUM[k.tahmin] || DURUM.belirsiz;
+    ipucu.innerHTML = `#${k.seq} · ${saat(k.t)}<br><b>${fmt(k.rms)} mg</b> · ${d.ad}`;
+    ipucu.style.left = (e.clientX + 12) + "px"; ipucu.style.top = (e.clientY + 12) + "px";
+    ipucu.style.display = "block";
+  });
+  $("grafik").addEventListener("mouseleave", () => { ipucu.style.display = "none"; });
+
+  // veri akisi durdu mu?
+  setInterval(() => {
+    if (sonMesajZamani && Date.now() - sonMesajZamani > BAYAT_MS) {
+      $("durumAd").textContent = "Veri gelmiyor";
+      $("durumAciklama").textContent = "Son pencere " + Math.round((Date.now() - sonMesajZamani) / 1000) + " s önce geldi.";
+      $("durumIkon").style.background = "var(--notr)"; $("durumIkon").textContent = "…";
+      $("durumKutu").style.background = "var(--notr-zemin)";
+    }
+  }, 1000);
+
+  grafikCiz();
+
+  if (typeof mqtt === "undefined") {
+    rozet("brokerNokta", "brokerYazi", "var(--kritik)", "MQTT kütüphanesi yüklenemedi");
+    return;
+  }
+  const istemci = mqtt.connect(BROKER, {
+    clientId: "arayuz-" + Math.random().toString(16).slice(2, 10),
+    clean: true, reconnectPeriod: 3000, connectTimeout: 10000
+  });
+  istemci.on("connect", () => {
+    rozet("brokerNokta", "brokerYazi", "var(--iyi)", "Sunucuya bağlı");
+    istemci.subscribe([TOPIC_T, TOPIC_S]);
+  });
+  istemci.on("reconnect", () => rozet("brokerNokta", "brokerYazi", "var(--uyari)", "Yeniden bağlanılıyor…"));
+  istemci.on("offline", () => rozet("brokerNokta", "brokerYazi", "var(--kritik)", "Sunucu bağlantısı yok"));
+  istemci.on("error", () => rozet("brokerNokta", "brokerYazi", "var(--kritik)", "Bağlantı hatası"));
+  istemci.on("message", (konu, veri) => {
+    const metin = veri.toString();
+    if (konu === TOPIC_S) {
+      if (metin === "online") rozet("cihazNokta", "cihazYazi", "var(--iyi)", "Cihaz: çevrimiçi");
+      else if (metin === "offline") rozet("cihazNokta", "cihazYazi", "var(--kritik)", "Cihaz: çevrimdışı");
+      else {
+        try { const s = JSON.parse(metin);
+          $("sayaclar").textContent = ` · ESP sayaçları: yayın ${s.yayin}, bozuk satır ${s.bozuk_satir}, eşleşmeyen ${s.eslesmeyen}, Wi-Fi ${s.wifi_rssi} dBm`;
+          rozet("cihazNokta", "cihazYazi", "var(--iyi)", "Cihaz: çevrimiçi");
+        } catch (e) {}
+      }
+      return;
+    }
+    try { mesajIsle(JSON.parse(metin)); } catch (e) { /* bozuk mesaj: yok say */ }
+  });
+})();
+</script>
+</body>
+</html>

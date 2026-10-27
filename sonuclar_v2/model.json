@@ -1,0 +1,31 @@
+{
+  "olusturma": "2026-10-27 19:31",
+  "veri_kaynagi": "gercek olcum; GY-521 (MPU-6500 uyumlu) + STM32F407, ayni tip iki motor (1A, 1B; tip 1 silindir); sentetik veri yok",
+  "ozellik": "rms_mag (pencere basina, ofset cikarilmis, 1024 ornek @ 1 kHz, +-4 g)",
+  "demo_modeli": {
+    "tur": "2 esik, 3 sinif (normal / orta_bozuk / cok_bozuk)",
+    "kural": "rms_mag < esik1 -> normal; esik1 <= rms_mag < esik2 -> orta_bozuk (2 karton); rms_mag >= esik2 -> cok_bozuk (somun)",
+    "esikler_mg": [
+      21.844,
+      119.839
+    ],
+    "esikler_ug": [
+      21844,
+      119839
+    ],
+    "kayit_sayisi": 13,
+    "pencere_sayisi": 763,
+    "montaj_disarida_pencere_dogrulugu": 0.924,
+    "kayit_karari": "12/13",
+    "motor_disarida_pencere_dogrulugu": 0.907,
+    "durum": "DEMO: ayni tip iki motorla; kor test yapilmadi; STM32'de henuz denenmedi"
+  },
+  "karsilastirma_2_sinif": {
+    "tur": "tek esik, 2 sinif (normal / arizali)",
+    "esik_mg": 21.844,
+    "esik_ug": 21844,
+    "montaj_disarida_pencere_dogrulugu": 0.924,
+    "kayit_karari": "12/13",
+    "motor_disarida_pencere_dogrulugu": 0.907
+  }
+}

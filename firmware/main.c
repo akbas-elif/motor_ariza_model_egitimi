@@ -93,12 +93,16 @@ uint32_t ov_start = 0;
 uint32_t err_start = 0;
 
 #define VOTE_N 5
+/* 3 duzey demo modeli (veri_egitimi_2/train.py, 13 kayit, motor 1A ve 1B, 2026-10-27):
+   rms_mag < ESIK1 -> normal, ESIK1..ESIK2 -> orta bozuk (2 karton), >= ESIK2 -> cok bozuk (somun) */
+#define RMS_ESIK1_UG 21844     // normal | orta bozuk      (21.8 mg)
+#define RMS_ESIK2_UG 119839    // orta bozuk | cok bozuk   (119.8 mg)
 
 uint8_t vote_buf[VOTE_N];
 uint8_t vote_count = 0;        // dolu eleman sayisi (en fazla VOTE_N)
 uint8_t vote_pos = 0;
 int8_t  last_pred = -1;        // son pencerenin ham tahmini, -1: gecersiz pencere
-int8_t  motor_state = -1;      // oylanmis durum: -1 belirsiz, 0 normal, 1 dengesiz
+int8_t  motor_state = -1;      // oylanmis durum: -1 belirsiz, 0 normal, 1 orta bozuk, 2 cok bozuk
 int32_t last_rms_mag_ug = 0;   // Live Expressions'ta izlemek icin
 /* USER CODE END PV */
 
@@ -120,11 +124,13 @@ uint8_t classify(int32_t rms_mag_ug);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/* Durumu LED'de goster: yesil = normal, turuncu = dengesiz, ikisi sonuk = belirsiz */
+/* Durumu LED'de goster: yesil = normal, turuncu = orta bozuk, kirmizi (sabit) = cok bozuk,
+   hepsi sonuk = belirsiz. (Yanip sonen kirmizi = sensor yok, ana dongude.) */
 static void show_state(void)
 {
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, (motor_state == 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, (motor_state == 1) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, (motor_state == 2) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 static void vote_reset(void)
@@ -135,7 +141,8 @@ static void vote_reset(void)
   show_state();
 }
 
-/* Yeni tahmini son VOTE_N tahminle oyla; VOTE_N dolmadan durum belirsiz kalir */
+/* Yeni tahmini son VOTE_N tahminle oyla; VOTE_N dolmadan durum belirsiz kalir.
+   Siniflar sirali (0 < 1 < 2) oldugu icin son 5 tahminin ORTANCASI alinir (beraberlik olmaz). */
 static void vote_add(uint8_t pred)
 {
   vote_buf[vote_pos] = pred;
@@ -144,9 +151,18 @@ static void vote_add(uint8_t pred)
 
   if (vote_count == VOTE_N)
   {
-    uint8_t ones = 0;
-    for (int i = 0; i < VOTE_N; i++) ones += vote_buf[i];
-    motor_state = (ones > VOTE_N / 2) ? 1 : 0;
+    uint8_t cnt[3] = {0, 0, 0};
+    for (int i = 0; i < VOTE_N; i++)
+    {
+      if (vote_buf[i] < 3) cnt[vote_buf[i]]++;
+    }
+    uint8_t need = VOTE_N / 2 + 1;   // ortanca: kucukten sayarken 3. eleman
+    uint8_t acc = 0;
+    for (int c = 0; c < 3; c++)
+    {
+      acc += cnt[c];
+      if (acc >= need) { motor_state = (int8_t)c; break; }
+    }
   }
   show_state();
 }
@@ -765,13 +781,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 uint8_t classify(int32_t rms_mag_ug)
 {
-  if (rms_mag_ug <= 838154)
+  if (rms_mag_ug < RMS_ESIK1_UG)
   {
     return 0;  /* normal */
   }
+  else if (rms_mag_ug < RMS_ESIK2_UG)
+  {
+    return 1;  /* orta bozuk */
+  }
   else
   {
-    return 1;  /* dengesiz */
+    return 2;  /* cok bozuk */
   }
 }
 /* USER CODE END 4 */

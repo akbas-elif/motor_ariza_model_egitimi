@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+# Wi-Fi bilgileri GitHub a gonderilmez
+esp8266/**/secrets.h
