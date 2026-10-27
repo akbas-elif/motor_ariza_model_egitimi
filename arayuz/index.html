@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Motor Titreşim İzleme</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Motor Titreşim İzleme</h1>
+    <div class="device"><span class="dot online"></span>Bağlantı: <strong id="connectionText">Demo</strong></div>
+    <div class="device">STM32F407</div>
+    <div class="device">MPU6050</div>
+    <div class="diagnostic">Hız: <strong id="speedValue">0.97 pencere/s</strong></div>
+    <div class="diagnostic">I²C Hatası: <strong id="i2cValue">0</strong></div>
+    <div class="diagnostic">Geçersiz: <strong id="invalidValue">0</strong></div>
+  </header>
+
+  <main>
+    <section class="panel trend-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Pencere özellikleri</h2>
+          <p>Her nokta 1024 örneklik bir ölçüm penceresidir.</p>
+        </div>
+        <div class="legend">
+          <span><i class="blue"></i>RMS X</span>
+          <span><i class="orange"></i>RMS Y</span>
+          <span><i class="green"></i>RMS Z</span>
+          <span><i class="red"></i>RMS MAG</span>
+        </div>
+      </div>
+      <canvas id="trendChart" aria-label="Pencere özellikleri çizgi grafiği"></canvas>
+    </section>
+
+    <section class="panel status-panel">
+      <h2>Motor durumu</h2>
+      <div id="statusRing" class="status-ring normal">
+        <div>
+          <strong id="statusLabel">NORMAL</strong>
+          <span id="statusRule">eşik altında</span>
+        </div>
+      </div>
+      <div class="threshold-row"><span>Model eşiği</span><strong>838154 µg</strong></div>
+      <div class="threshold-row"><span>Eşiğe uzaklık</span><strong id="distanceValue">—</strong></div>
+      <p class="model-note">Final karar ağacı yalnızca RMS MAG değerini kullanır.</p>
+    </section>
+
+    <section class="metric-grid" aria-label="Anlık pencere özellikleri">
+      <article class="metric" data-metric="rms_x_ug" data-max="1600000">
+        <div class="gauge"><div><strong id="rmsX">—</strong><span>µg</span></div></div>
+        <h3>RMS X</h3>
+      </article>
+      <article class="metric" data-metric="rms_y_ug" data-max="1600000">
+        <div class="gauge"><div><strong id="rmsY">—</strong><span>µg</span></div></div>
+        <h3>RMS Y</h3>
+      </article>
+      <article class="metric" data-metric="rms_z_ug" data-max="1600000">
+        <div class="gauge"><div><strong id="rmsZ">—</strong><span>µg</span></div></div>
+        <h3>RMS Z</h3>
+      </article>
+      <article class="metric" data-metric="rms_mag_ug" data-max="1800000">
+        <div class="gauge"><div><strong id="rmsMag">—</strong><span>µg</span></div></div>
+        <h3>RMS MAG</h3>
+      </article>
+      <article class="metric" data-metric="peak_ug" data-max="2600000">
+        <div class="gauge"><div><strong id="peak">—</strong><span>µg</span></div></div>
+        <h3>PEAK</h3>
+      </article>
+      <article class="metric" data-metric="crest_x1000" data-max="2500">
+        <div class="gauge"><div><strong id="crest">—</strong><span>oran</span></div></div>
+        <h3>CREST</h3>
+      </article>
+    </section>
+
+    <section class="panel controls-panel">
+      <h2>Veri kaynağı</h2>
+      <label class="file-label" for="csvInput">CSV dosyası seç</label>
+      <input id="csvInput" type="file" accept=".csv,text/csv">
+      <div class="button-row">
+        <button id="demoButton" class="primary">Demo başlat</button>
+        <button id="pauseButton">Duraklat</button>
+        <button id="resetButton">Sıfırla</button>
+      </div>
+      <dl class="source-meta">
+        <div><dt>Kaynak</dt><dd id="sourceName">Dahili demo</dd></div>
+        <div><dt>Motor</dt><dd id="motorValue">—</dd></div>
+        <div><dt>Run</dt><dd id="runValue">—</dd></div>
+        <div><dt>Pencere</dt><dd id="windowValue">0 / 0</dd></div>
+      </dl>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-heading">
+        <div><h2>Tahmin geçmişi</h2><p>Son sekiz geçerli pencere</p></div>
+        <span class="model-file">final_tree.joblib</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Saat</th><th>Seq</th><th>Durum</th><th>RMS MAG</th><th>Geçerli</th></tr></thead>
+          <tbody id="historyBody"><tr><td colspan="5" class="empty">Veri bekleniyor</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>Yerel izleme arayüzü · localhost:8000 · Tahmin: rms_mag_ug ≤ 838154 → Normal, aksi → Bozuk</footer>
+  <script src="app.js"></script>
+</body>
+</html>
