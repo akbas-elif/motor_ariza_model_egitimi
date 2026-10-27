@@ -1,0 +1,19 @@
+dosya,tarih,motor,tip,durum,volt_set,volt_olculen,montaj,run,pencere,gecerli,taninmayan,rms_mag_ort_ug,rms_mag_std_ug,crest_ort_x1000,karar,not
+m1B_normal_5V_mt1_r2_20261027_114548.csv,2026-10-27 11:46:51,1B,1,normal,5,4.8,1,2,59,59,0,17125,737,1834,KABUL,
+m1A_normal_5V_mt1_r1_20261027_120742.csv,2026-10-27 12:08:45,1A,1,normal,5,4.8,1,1,58,58,0,12905,138,2078,KABUL,
+m1B_bozuk_5V_mt2_r3_20261027_121631.csv,2026-10-27 12:17:33,1B,1,bozuk,5,4.8,2,3,59,59,0,23268,2684,2561,KABUL,kucuk agirlik: bir karton
+m1A_bozuk_5V_mt2_r4_20261027_122138.csv,2026-10-27 12:22:40,1A,1,bozuk,5,4.8,2,4,61,61,0,19422,412,2097,KABUL,kucuk agirlik: bir karton
+m1B_cok_bozuk_5V_mt3_r5_20261027_122440.csv,2026-10-27 12:25:42,1B,1,cok_bozuk,5,4.8,3,5,59,59,0,36214,889,1783,KABUL,buyuk agirlik: iki karton
+m1A_cok_bozuk_5V_mt3_r6_20261027_123810.csv,2026-10-27 12:39:12,1A,1,cok_bozuk,5,4.8,3,6,58,58,0,23122,261,2202,KABUL,buyuk agirlik: iki karton
+m1B_cok_bozuk_5V_mt4_r7_20261027_124257.csv,2026-10-27 12:44:00,1B,1,cok_bozuk,5,4.8,4,7,60,60,5,38587,497,2042,KABUL,buyuk agirlik: iki karton
+m1A_cok_bozuk_5V_mt4_r8_20261027_124554.csv,2026-10-27 12:46:56,1A,1,cok_bozuk,5,4.8,4,8,58,58,0,43040,3646,2157,KABUL,buyuk agirlik: iki karton
+m1B_bozuk_5V_mt5_r9_20261027_125104.csv,2026-10-27 12:52:07,1B,1,bozuk,5,4.8,5,9,60,60,5,23376,791,2364,KABUL,kucuk agirlik: bir karton
+m1A_bozuk_5V_mt5_r10_20261027_125339.csv,2026-10-27 12:54:41,1A,1,bozuk,5,4.8,5,10,60,60,4,28151,1171,2112,KABUL,kucuk agirlik: bir karton
+m1B_normal_5V_mt6_r11_20261027_125622.csv,2026-10-27 12:57:25,1B,1,normal,5,4.8,6,11,60,60,0,19918,961,1968,KABUL,
+m1A_normal_5V_mt6_r12_20261027_125850.csv,2026-10-27 12:59:51,1A,1,normal,5,4.8,6,12,58,58,0,17567,621,2004,KABUL,
+m1B_normal_5V_mt7_r14_20261027_162930.csv,2026-10-27 16:30:31,1B,1,normal,5,4.8,7,14,58,58,0,15762,598,2155,KABUL,
+m1A_bozuk_5V_mt8_r15_20261027_163513.csv,2026-10-27 16:36:15,1A,1,bozuk,5,4.8,8,15,58,58,0,22348,257,2007,KABUL,kucuk agirlik: bir karton
+m1A_normal_5V_mt10_r17_20261027_174413.csv,2026-10-27 17:45:16,1A,1,normal,5,4.8,10,17,58,58,0,18621,347,2116,KABUL,
+m1A_cok_bozuk_5V_mt11_r18_20261027_174656.csv,2026-10-27 17:47:57,1A,1,cok_bozuk,5,4.8,11,18,60,60,5,39022,2005,1752,KABUL,buyuk agirlik: iki karton
+m1B_dengesiz_5V_mt9_r21_20261027_184202.csv,2026-10-27 18:43:04,1B,1,dengesiz,5,4.8,9,21,60,60,1,498866,35216,1527,KABUL,somun lehimli | not: kayit icinde kayma >%15 (somunlu kayitta titresim yukseliyor); kullanici karariyla tutuldu
+m1A_dengesiz_5V_mt12_r20_20261027_185046.csv,2026-10-27 18:51:48,1A,1,dengesiz,5,4.8,12,20,59,59,1,421226,42419,1511,KABUL,somun lehimli | not: kayit icinde kayma >%15 (somunlu kayitta titresim yukseliyor); kullanici karariyla tutuldu

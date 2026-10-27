@@ -1,0 +1,20 @@
+dosya,tarih,motor,tip,durum,volt_set,volt_olculen,montaj,run,pencere,gecerli,taninmayan,rms_mag_ort_ug,rms_mag_std_ug,crest_ort_x1000,karar,not
+m1B_normal_3.3V_mt1_r1_20261023_165049.csv,2026-10-23 16:51:09,1B,1,normal,3.3,3.3,1,1,0,0,0,,,,TEKRARLA,
+m1B_normal_3.3V_mt1_r1_20261023_165557.csv,2026-10-23 16:56:59,1B,1,normal,3.3,3.3,1,1,0,0,0,,,,TEKRARLA,
+m1B_dengesiz_3.3V_mt1_r1_20261027_095813.csv,2026-10-27 09:59:15,1B,1,dengesiz,3.3,3.2,1,1,58,57,0,10340,3139,2584,TEKRARLA,
+m1B_normal_3.3V_mt1_r1_20261027_100126.csv,2026-10-27 10:02:18,1B,1,normal,3.3,3.2,1,1,9,9,5,11571,110,2135,TEKRARLA,
+m1B_normal_5V_mt1_r1_20261027_111741.csv,2026-10-27 11:17:52,1B,1,normal,5,4.8,1,1,8,8,0,10722,95,2169,TEKRARLA,
+m1B_normal_5V_mt1_r1_20261027_113709.csv,2026-10-27 11:38:12,1B,1,normal,5,4.8,1,1,58,58,0,16414,1076,1978,ATILDI,"ATILDI: duragan degil (ilk10-son10 kayma >%15, isinma); tekrar cekilecek"
+m1B_bozuk_5V_mt1_r1_20261027_113942.csv,2026-10-27 11:40:44,1B,1,bozuk,5,4.8,1,1,58,58,0,23005,2290,1919,ATILDI,"kucuk agirlik: kücük bant | ATILDI: duragan degil (ilk10-son10 kayma >%15, isinma); tekrar cekilecek"
+m1B_bozuk_5V_mt1_r2_20261027_114814.csv,2026-10-27 11:49:17,1B,1,bozuk,5,4.8,1,2,60,60,5,24155,272,1846,KABUL,kucuk agirlik: bir karton
+m1B_cok_bozuk_5V_mt1_r2_20261027_115709.csv,2026-10-27 11:58:11,1B,1,cok_bozuk,5,4.8,1,2,59,59,5,35190,2908,1991,KABUL,buyuk agirlik: iki karton
+m1B_cok_bozuk_5V_mt1_r2_20261027_120205.csv,2026-10-27 12:03:08,1B,1,cok_bozuk,5,4.8,1,2,59,59,0,37671,1393,1931,KABUL,buyuk agirlik: iki karton
+m1A_cok_bozuk_5V_mt9_r16_20261027_163957.csv,2026-10-27 16:40:59,1A,1,cok_bozuk,5,4.8,9,16,58,58,0,361929,34944,1448,KABUL,"buyuk agirlik: iki karton | dosya kullanici tarafindan raw klasorunden silindi (2026-10-27 17:00); 1A cok bozuk montaj 9 denemeleri, karton sabitleme tutarsiz"
+m1A_cok_bozuk_5V_mt9_r16_20261027_164621.csv,2026-10-27 16:47:23,1A,1,cok_bozuk,5,4.8,9,16,58,58,0,29872,2763,1889,KABUL,"buyuk agirlik: iki karton | dosya kullanici tarafindan raw klasorunden silindi (2026-10-27 17:00); 1A cok bozuk montaj 9 denemeleri, karton sabitleme tutarsiz"
+m1A_cok_bozuk_5V_mt9_r16_20261027_165001.csv,2026-10-27 16:50:11,1A,1,cok_bozuk,5,4.8,9,16,10,10,4,25834,3740,2511,TEKRARLA,"buyuk agirlik: iki karton | dosya kullanici tarafindan raw klasorunden silindi (2026-10-27 17:00); 1A cok bozuk montaj 9 denemeleri, karton sabitleme tutarsiz"
+m1A_cok_bozuk_5V_mt9_r16_20261027_165259.csv,2026-10-27 16:54:01,1A,1,cok_bozuk,5,4.8,9,16,59,59,5,51675,1069,1730,KABUL,"buyuk agirlik: iki karton | dosya kullanici tarafindan raw klasorunden silindi (2026-10-27 17:00); 1A cok bozuk montaj 9 denemeleri, karton sabitleme tutarsiz"
+m1A_cok_bozuk_5V_mt9_r16_20261027_165438.csv,2026-10-27 16:55:41,1A,1,cok_bozuk,5,4.8,9,16,60,60,5,37596,1333,1978,KABUL,"buyuk agirlik: iki karton | dosya kullanici tarafindan raw klasorunden silindi (2026-10-27 17:00); 1A cok bozuk montaj 9 denemeleri, karton sabitleme tutarsiz"
+m1A_normal_5V_mt7_r13_20261027_162406.csv,2026-10-27 16:25:08,1A,1,normal,5,4.8,7,13,58,58,0,17462,1084,2354,KABUL,"ATILDI: kayit icinde kayma >%15 (onceden konan kural); dosya raw klasorunden cikarildi (2026-10-27 17:40), yerine yeni kayit alindi"
+m1A_cok_bozuk_5V_mt9_r16_20261027_171113.csv,2026-10-27 17:12:16,1A,1,cok_bozuk,5,4.8,9,16,59,59,0,32220,3081,2124,KABUL,"buyuk agirlik: iki karton | ATILDI: kayit icinde kayma >%15 (onceden konan kural); dosya raw klasorunden cikarildi (2026-10-27 17:40), yerine yeni kayit alindi"
+m1B_dengesiz_5V_mt8_r19_20261027_183727.csv,2026-10-27 18:38:23,1B,1,dengesiz,5,4.8,8,19,53,53,5,53923,47150,3413,KABUL,somun lehimli | ATILDI: motor kayit ortasinda durdu (son ~17 pencere 4-9 mg = motor kapali seviyesi); dosya data_v2/atilan
+m1B_dengesiz_5V_mt9_r21_20261027_183928.csv,2026-10-27 18:40:29,1B,1,dengesiz,5,4.8,9,21,59,58,1,390300,91566,1698,TEKRARLA,"somun lehimli | ATILDI: motor kayit sonunda durdu/takildi, logger TEKRARLA; dosya data_v2/atilan"

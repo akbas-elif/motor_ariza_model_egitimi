@@ -1,0 +1,5 @@
+senaryo,kayit_sayisi,sinif,model,pencere_dogruluk_montaj_disarida,pencere_dogruluk_5li_oy,kayit_karari,pencere_dogruluk_motor_disarida,esikler_mg_tum_veri
+A (tum kayitlar),13,3 (normal/orta_bozuk/cok_bozuk),2 esik,0.924,0.924,12/13,0.907,"21.8, 119.8"
+A (tum kayitlar),13,3 (normal/orta_bozuk/cok_bozuk),karar agaci,0.91,0.913,12/13,0.91,"21.8, 184.8"
+A (tum kayitlar),13,2 (normal/arizali),tek esik,0.924,0.924,12/13,0.907,21.8
+A (tum kayitlar),13,2 (normal/arizali),karar agaci,0.91,0.913,12/13,0.91,21.8
