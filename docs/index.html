@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motor Titreşim İzleme</title>
 <style>
   :root {
-    --yuzey: #fcfcfb; --sayfa: #f9f9f7; --kart: #ffffff;
-    --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
-    --grid: #e1e0d9; --eksen: #c3c2b7; --cizgi: rgba(11,11,11,0.10);
-    --seri: #2a78d6;
-    --iyi: #0ca30c; --uyari: #fab219; --kritik: #d03b3b; --notr: #898781;
-    --iyi-zemin: #e7f6e7; --uyari-zemin: #fff4dc; --kritik-zemin: #fbe7e7; --notr-zemin: #f0efec;
+    --yuzey: #171a22; --sayfa: #0b0d12; --kart: #151820; --yan: #101219;
+    --ink: #f3f5f8; --ink2: #b7bdc9; --muted: #747d8d;
+    --grid: #292e3a; --eksen: #3b4252; --cizgi: rgba(180,190,210,0.14);
+    --seri: #6e7efb; --mor: #8d6cf5; --pembe: #c16ff2;
+    --iyi: #3ddc97; --uyari: #f4b941; --kritik: #ff6572; --notr: #687385;
+    --iyi-zemin: #10291f; --uyari-zemin: #302510; --kritik-zemin: #32171c; --notr-zemin: #1b2029;
   }
   @media (prefers-color-scheme: dark) {
     :root:where(:not([data-theme="light"])) {
@@ -23,31 +23,64 @@
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--sayfa); color: var(--ink);
-         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 1040px; margin: 0 auto; padding: 20px 16px 40px; }
-  header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
-  h1 { font-size: 20px; margin: 0; }
+  html { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: grid; grid-template-columns: 210px minmax(0,1fr);
+         background: var(--sayfa); color: var(--ink);
+         font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { width: 100%; max-width: 1540px; margin: 0 auto; padding: 28px 28px 48px; }
+  .sidebar { min-height: 100vh; position: sticky; top: 0; align-self: start; padding: 26px 18px;
+             background: var(--yan); border-right: 1px solid var(--cizgi); display: flex; flex-direction: column; }
+  .marka { display: flex; align-items: center; gap: 10px; padding: 0 8px 28px; font-weight: 760; letter-spacing: -.02em; }
+  .marka-isaret { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px;
+                  background: var(--seri); color: white; font-size: 13px; }
+  .nav-baslik { padding: 0 10px; margin: 8px 0; color: #555e6e; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+  .nav-item { display: flex; gap: 10px; align-items: center; padding: 10px 12px; margin: 3px 0; border-radius: 8px;
+              color: #8d95a5; font-size: 13px; text-decoration: none; }
+  .nav-item.active { background: #1b1f2a; color: #fff; border-left: 2px solid var(--seri); }
+  .nav-icon { width: 17px; text-align: center; color: #697386; }
+  .sidebar-alt { margin-top: auto; padding: 16px 10px 0; border-top: 1px solid var(--cizgi); color: #626b7a; font-size: 11px; line-height: 1.6; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px;
+           padding: 4px 2px 24px; border-bottom: 1px solid var(--cizgi); }
+  h1 { font-size: clamp(24px, 4vw, 38px); letter-spacing: -.045em; line-height: 1.05; margin: 3px 0 6px; }
+  .kicker { color: var(--seri); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
   .alt { color: var(--ink2); font-size: 13px; }
   .rozetler { display: flex; gap: 8px; flex-wrap: wrap; }
-  .rozet { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--cizgi);
-           background: var(--kart); color: var(--ink2); display: inline-flex; gap: 6px; align-items: center; }
+  .rozet { font-size: 12px; padding: 7px 11px; border-radius: 7px; border: 1px solid var(--cizgi);
+           background: #141821; color: var(--ink2); display: inline-flex; gap: 7px; align-items: center; }
   .nokta { width: 8px; height: 8px; border-radius: 50%; background: var(--notr); }
-  .grid { display: grid; grid-template-columns: 320px 1fr; gap: 16px; margin-top: 16px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 16px; margin-top: 16px; }
   @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
-  .kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 12px; padding: 16px; }
+  .kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 11px;
+          padding: 20px; box-shadow: 0 12px 28px rgba(0,0,0,.15); }
   .kart h2 { font-size: 13px; font-weight: 600; color: var(--ink2); margin: 0 0 12px; }
-  #durumKart { display: flex; flex-direction: column; gap: 10px; }
-  #durumKutu { border-radius: 10px; padding: 18px 16px; background: var(--notr-zemin);
-               display: flex; align-items: center; gap: 14px; }
+  #durumKart { display: flex; flex-direction: column; gap: 10px; grid-column: 2; grid-row: 1; }
+  .grid > section:not(#durumKart) { grid-column: 1; grid-row: 1; }
+  #durumKutu { width: min(220px, 72vw); aspect-ratio: 1; margin: 6px auto 10px;
+               border-radius: 50%; padding: 28px; background: #11141b;
+               display: flex; flex-direction: column; align-items: center; justify-content: center;
+               gap: 10px; text-align: center; border: 10px solid var(--notr);
+               box-shadow: inset 0 0 24px rgba(0,0,0,.18); }
   #durumIkon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
                font-size: 24px; font-weight: 700; color: #fff; background: var(--notr); flex: none; }
-  #durumAd { font-size: 24px; font-weight: 700; }
+  #durumAd { font-size: 25px; line-height: 1.05; letter-spacing: -.035em; font-weight: 750; }
   #durumAciklama { font-size: 13px; color: var(--ink2); }
-  .olcu { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .olcu div { background: var(--sayfa); border-radius: 8px; padding: 10px; }
-  .olcu b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
-  .olcu span { font-size: 12px; color: var(--muted); }
+  .metrics-strip { margin-top: 16px; }
+  .olcu { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .olcu div { --ring: var(--seri); position: relative; min-height: 112px; display: flex; flex-direction: column;
+              align-items: flex-start; justify-content: center; text-align: left; overflow: hidden;
+              background: var(--kart); border: 1px solid var(--cizgi);
+              border-radius: 10px; padding: 22px 18px 18px; box-shadow: 0 12px 24px rgba(0,0,0,.12); }
+  .olcu div::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--ring); }
+  .olcu div:nth-child(2) { --ring: var(--uyari); }
+  .olcu div:nth-child(3) { --ring: var(--iyi); }
+  .olcu div:nth-child(4) { --ring: var(--kritik); }
+  .olcu div:nth-child(5) { --ring: #b875ff; }
+  .olcu div:nth-child(6) { --ring: #f0d34d; }
+  .olcu b { position: relative; z-index: 1; display: block; font-size: 25px; color: var(--ink);
+            font-variant-numeric: tabular-nums; }
+  .olcu span { position: absolute; z-index: 1; top: 13px; color: var(--muted);
+               font-size: 12px; font-weight: 750; letter-spacing: .04em; }
+  .olcu small { position: relative; z-index: 1; margin-top: 2px; color: var(--muted); font-size: 10px; }
   svg { width: 100%; height: auto; display: block; }
   .ekseny, .eksenx { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
   .esikyazi { font-size: 11px; fill: var(--ink2); }
@@ -62,18 +95,66 @@
   #ipucu { position: fixed; pointer-events: none; background: var(--kart); border: 1px solid var(--cizgi);
            border-radius: 8px; padding: 6px 8px; font-size: 12px; color: var(--ink); display: none;
            box-shadow: 0 2px 8px rgba(0,0,0,.12); font-variant-numeric: tabular-nums; }
+  .baslik-sag { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .demo-btn, .csv-btn { border: 1px solid var(--cizgi); border-radius: 7px; padding: 9px 14px; color: #fff;
+              background: #1a1f2a; cursor: pointer; font-weight: 750; font-size: 12px;
+              transition: transform .18s, background .18s; }
+  .csv-btn { background: var(--seri); border-color: var(--seri); }
+  .demo-btn:hover, .csv-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .kaynak-bilgi { width: 100%; text-align: right; color: var(--muted); font-size: 11px; }
+  .model-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0; }
+  .model-stat { padding: 17px 18px; border-top: 2px solid var(--seri); }
+  .model-stat:nth-child(2) { border-top-color: var(--uyari); }
+  .model-stat:nth-child(3) { border-top-color: var(--iyi); }
+  .model-stat:nth-child(4) { border-top-color: #b875ff; }
+  .model-stat span { display: block; color: var(--muted); font-size: 10px; font-weight: 750;
+                     letter-spacing: .07em; text-transform: uppercase; }
+  .model-stat strong { display: block; margin-top: 8px; font-size: 24px; letter-spacing: -.03em;
+                       font-variant-numeric: tabular-nums; }
+  .model-stat small { color: var(--muted); font-size: 11px; }
+  .uyari-bandi { display: none; margin-top: auto; padding: 12px 13px; border-radius: 8px; font-size: 12px;
+                 line-height: 1.45; border: 1px solid var(--cizgi); background: #1b1e27; color: var(--ink2); }
+  .uyari-bandi.goster { display: block; }
+  @media (max-width: 760px) {
+    body { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    main { padding: 18px 14px 36px; }
+    header { padding: 18px; }
+    .baslik-sag { justify-content: flex-start; }
+    .kaynak-bilgi { text-align: left; }
+    .model-grid { grid-template-columns: 1fr 1fr; }
+    #durumKart, .grid > section:not(#durumKart) { grid-column: 1; grid-row: auto; }
+    .olcu { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
+<aside class="sidebar" aria-label="Ana menü">
+  <div class="marka"><span class="marka-isaret">MI</span><span>Motor Insight</span></div>
+  <div class="nav-baslik">İZLEME</div>
+  <a class="nav-item active" href="#durumKart"><span class="nav-icon">●</span>Genel durum</a>
+  <a class="nav-item" href="#grafik"><span class="nav-icon">⌁</span>Titreşim analizi</a>
+  <a class="nav-item" href="#kayitlar"><span class="nav-icon">▤</span>Ölçüm kayıtları</a>
+  <div class="nav-baslik" style="margin-top:24px">SİSTEM</div>
+  <a class="nav-item" href="#model"><span class="nav-icon">◇</span>Model bilgisi</a>
+  <div class="sidebar-alt">STM32F407<br>MPU6050 · ESP8266</div>
+</aside>
 <main>
   <header>
     <div>
+      <div class="kicker">Canlı titreşim analizi</div>
       <h1>Motor Titreşim İzleme</h1>
       <div class="alt">STM32F407 + GY-521 · pencere başına durum sınıflandırma (1024 örnek, 1 kHz)</div>
     </div>
-    <div class="rozetler">
-      <span class="rozet" id="brokerRozet"><span class="nokta" id="brokerNokta"></span><span id="brokerYazi">Sunucuya bağlanılıyor…</span></span>
-      <span class="rozet" id="cihazRozet"><span class="nokta" id="cihazNokta"></span><span id="cihazYazi">Cihaz: bilinmiyor</span></span>
+    <div class="baslik-sag">
+      <div class="rozetler">
+        <span class="rozet" id="brokerRozet"><span class="nokta" id="brokerNokta"></span><span id="brokerYazi">Sunucuya bağlanılıyor…</span></span>
+        <span class="rozet" id="cihazRozet"><span class="nokta" id="cihazNokta"></span><span id="cihazYazi">Cihaz: bilinmiyor</span></span>
+      </div>
+      <button class="demo-btn" id="demoBtn" type="button">Demo görüntüle</button>
+      <button class="csv-btn" id="csvBtn" type="button">CSV seç</button>
+      <input id="csvInput" type="file" accept=".csv,text/csv" hidden>
+      <div class="kaynak-bilgi" id="kaynakYazi">Kaynak: canlı MQTT</div>
     </div>
   </header>
 
@@ -87,12 +168,7 @@
           <div id="durumAciklama">Henüz pencere gelmedi.</div>
         </div>
       </div>
-      <div class="olcu">
-        <div><span>rms_mag</span><b id="rmsDeger">–</b></div>
-        <div><span>tepe (peak)</span><b id="peakDeger">–</b></div>
-        <div><span>crest faktörü</span><b id="crestDeger">–</b></div>
-        <div><span>son pencere</span><b id="sonDeger">–</b></div>
-      </div>
+      <div class="uyari-bandi" id="uyariBandi" role="alert"></div>
     </section>
 
     <section class="kart">
@@ -101,13 +177,31 @@
       <div class="alt" id="grafikNot" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px">
         <span>Nokta rengi = o pencerenin ham tahmini:</span>
         <span class="etiket"><i style="background:var(--iyi);border-radius:50%"></i>Normal</span>
-        <span class="etiket"><i style="background:var(--uyari);border-radius:50%"></i>Orta bozuk</span>
-        <span class="etiket"><i style="background:var(--kritik);border-radius:50%"></i>Çok bozuk</span>
+        <span class="etiket"><i style="background:var(--uyari);border-radius:50%"></i>Arızalı</span>
+        <span class="etiket"><i style="background:var(--kritik);border-radius:50%"></i>Kritik arıza</span>
       </div>
     </section>
   </div>
 
-  <section class="kart" style="margin-top:16px">
+  <section class="metrics-strip" aria-label="Anlık pencere özellikleri">
+    <div class="olcu">
+      <div><b id="rmsXDeger">–</b><small>mg</small><span>RMS X</span></div>
+      <div><b id="rmsYDeger">–</b><small>mg</small><span>RMS Y</span></div>
+      <div><b id="rmsZDeger">–</b><small>mg</small><span>RMS Z</span></div>
+      <div><b id="rmsDeger">–</b><small>mg</small><span>RMS MAG</span></div>
+      <div><b id="peakDeger">–</b><small>mg</small><span>PEAK</span></div>
+      <div><b id="crestDeger">–</b><small>oran</small><span>CREST</span></div>
+    </div>
+  </section>
+
+  <section class="model-grid" id="model" aria-label="Model özeti">
+    <article class="kart model-stat"><span>Eşik 1</span><strong>21,844 mg</strong><small>Normal → arızalı</small></article>
+    <article class="kart model-stat"><span>Eşik 2</span><strong>119,839 mg</strong><small>Arızalı → kritik arıza</small></article>
+    <article class="kart model-stat"><span>Motor-dışı test</span><strong>%90,7</strong><small>Pencere doğruluğu</small></article>
+    <article class="kart model-stat"><span>Veri kapsamı</span><strong>763</strong><small>13 kayıttaki pencere</small></article>
+  </section>
+
+  <section class="kart" id="kayitlar" style="margin-top:16px">
     <h2>Son pencereler</h2>
     <div class="tablo-kap">
       <table>
@@ -118,7 +212,7 @@
   </section>
 
   <footer>
-    Eşikler: normal &lt; 21,8 mg ≤ orta bozuk &lt; 119,8 mg ≤ çok bozuk (STM32'deki model ile aynı).
+    Eşikler: normal &lt; 21,8 mg ≤ arızalı &lt; 119,8 mg ≤ kritik arıza (STM32'deki model ile aynı).
     Sınıflandırma kartın üzerinde yapılır; bu sayfa yalnızca sonucu gösterir.<br>
     Demo: aynı tip iki motorla eğitildi, kör test yapılmadı. Veri herkese açık bir test sunucusundan (broker.emqx.io) geçer; kişisel bilgi gönderilmez.
     <span id="sayaclar"></span>
@@ -138,8 +232,8 @@
 
   const DURUM = {
     normal:       { ad: "Normal",       ikon: "✓", renk: "var(--iyi)",    zemin: "var(--iyi-zemin)",    acik: "Titreşim normal düzeyde." },
-    orta_bozuk:   { ad: "Orta bozuk",   ikon: "!", renk: "var(--uyari)",  zemin: "var(--uyari-zemin)",  acik: "Dengesizlik belirtisi (2 karton düzeyi)." },
-    cok_bozuk:    { ad: "Çok bozuk",    ikon: "✕", renk: "var(--kritik)", zemin: "var(--kritik-zemin)", acik: "Güçlü dengesizlik (somun düzeyi). Motoru durdurun." },
+    orta_bozuk:   { ad: "Arızalı",       ikon: "!", renk: "var(--uyari)",  zemin: "var(--uyari-zemin)",  acik: "Titreşim güvenli çalışma sınırını aştı.", uyari: "Sistemi 10 dakika içinde kapatın ve mekanik bağlantıları kontrol edin." },
+    cok_bozuk:    { ad: "Kritik arıza",  ikon: "✕", renk: "var(--kritik)", zemin: "var(--kritik-zemin)", acik: "Kritik titreşim seviyesi algılandı.", uyari: "Sistemi hemen, en geç 10 dakika içinde kapatın. Çalıştırmaya devam etmeyin." },
     belirsiz:     { ad: "Belirsiz",     ikon: "…", renk: "var(--notr)",   zemin: "var(--notr-zemin)",   acik: "Oylama için 5 pencere bekleniyor." },
     olcum_hatasi: { ad: "Ölçüm hatası", ikon: "?", renk: "var(--notr)",   zemin: "var(--notr-zemin)",   acik: "Sensör/I2C hatası; pencere geçersiz." }
   };
@@ -148,10 +242,25 @@
   const $ = (id) => document.getElementById(id);
   const gecmis = [];
   let sonMesajZamani = 0;
+  let demoTimer = null, demoSeq = 0;
+  let csvTimer = null, csvSatirlari = [], csvIndex = 0;
 
   function mg(ug) { return ug / 1000; }
   function fmt(v) { return v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2); }
   function saat(t) { return new Date(t).toLocaleTimeString("tr-TR"); }
+
+  function akislariDurdur() {
+    if (demoTimer) clearInterval(demoTimer);
+    if (csvTimer) clearInterval(csvTimer);
+    demoTimer = null; csvTimer = null;
+    $("demoBtn").textContent = "Demo görüntüle";
+  }
+
+  function gecmisiTemizle() {
+    gecmis.length = 0;
+    $("tablo").innerHTML = "";
+    grafikCiz();
+  }
 
   function rozet(noktaId, yaziId, renk, yazi) {
     $(noktaId).style.background = renk; $(yaziId).textContent = yazi;
@@ -160,17 +269,24 @@
   function durumGoster(anahtar) {
     const d = DURUM[anahtar] || DURUM.belirsiz;
     $("durumKutu").style.background = d.zemin;
+    $("durumKutu").style.borderColor = d.renk;
+    $("durumKutu").style.boxShadow = "inset 0 0 24px rgba(0,0,0,.20)";
     $("durumIkon").style.background = d.renk;
     $("durumIkon").textContent = d.ikon;
     $("durumAd").textContent = d.ad;
     $("durumAciklama").textContent = d.acik;
+    const uyari = $("uyariBandi");
+    uyari.textContent = d.uyari || "";
+    uyari.classList.toggle("goster", Boolean(d.uyari));
+    uyari.style.borderColor = d.renk;
   }
 
   function mesajIsle(m) {
     const t = Date.now();
     sonMesajZamani = t;
     const kayit = {
-      t, seq: m.seq, rms: mg(m.rms_mag_ug), peak: mg(m.peak_ug), crest: m.crest,
+      t, seq: m.seq, rx: mg(m.rms_x_ug), ry: mg(m.rms_y_ug), rz: mg(m.rms_z_ug),
+      rms: mg(m.rms_mag_ug), peak: mg(m.peak_ug), crest: m.crest,
       hata: (m.ov || 0) + (m.err || 0),
       tahmin: KOD_AD[String(m.tahmin)] || "belirsiz",
       durum: m.durum || KOD_AD[String(m.durum_kodu)] || "belirsiz"
@@ -179,10 +295,12 @@
     if (gecmis.length > MAKS) gecmis.shift();
 
     durumGoster(kayit.durum);
+    $("rmsXDeger").textContent = fmt(kayit.rx);
+    $("rmsYDeger").textContent = fmt(kayit.ry);
+    $("rmsZDeger").textContent = fmt(kayit.rz);
     $("rmsDeger").textContent = fmt(kayit.rms) + " mg";
     $("peakDeger").textContent = fmt(kayit.peak) + " mg";
     $("crestDeger").textContent = kayit.crest.toFixed(2);
-    $("sonDeger").textContent = "#" + kayit.seq;
     tabloCiz(); grafikCiz();
   }
 
@@ -258,6 +376,102 @@
 
   grafikCiz();
 
+  function demoAdim() {
+    const fazlar = [
+      { r: 13 + Math.random() * 5, p: 27 + Math.random() * 8, c: 1.65 + Math.random() * .25 },
+      { r: 48 + Math.random() * 18, p: 94 + Math.random() * 25, c: 1.75 + Math.random() * .30 },
+      { r: 150 + Math.random() * 55, p: 280 + Math.random() * 90, c: 1.70 + Math.random() * .35 }
+    ];
+    const f = fazlar[Math.floor(demoSeq / 7) % fazlar.length];
+    const kod = f.r < ESIK1 ? 0 : f.r < ESIK2 ? 1 : 2;
+    mesajIsle({ seq: ++demoSeq, rms_x_ug: Math.round(f.r * 420), rms_y_ug: Math.round(f.r * 730),
+                rms_z_ug: Math.round(f.r * 560), rms_mag_ug: Math.round(f.r * 1000), peak_ug: Math.round(f.p * 1000),
+                crest: f.c, ov: 0, err: 0, tahmin: kod, durum_kodu: kod, durum: KOD_AD[String(kod)] });
+  }
+  $("demoBtn").addEventListener("click", () => {
+    if (demoTimer) {
+      akislariDurdur();
+      $("kaynakYazi").textContent = "Kaynak: canlı MQTT";
+      return;
+    }
+    akislariDurdur();
+    $("kaynakYazi").textContent = "Kaynak: dahili renkli demo";
+    $("demoBtn").textContent = "Canlıya dön";
+    demoAdim();
+    demoTimer = setInterval(demoAdim, 900);
+  });
+
+  // --- Yerel CSV oynatici: dosya tarayicida okunur, sunucuya yuklenmez ---
+  function csvSatirAyir(satir, ayirac) {
+    const sonuc = []; let alan = "", tirnak = false;
+    for (let i = 0; i < satir.length; i++) {
+      const c = satir[i];
+      if (c === '"' && tirnak && satir[i + 1] === '"') { alan += '"'; i++; }
+      else if (c === '"') tirnak = !tirnak;
+      else if (c === ayirac && !tirnak) { sonuc.push(alan.trim()); alan = ""; }
+      else alan += c;
+    }
+    sonuc.push(alan.trim()); return sonuc;
+  }
+
+  function csvCoz(metin) {
+    const satirlar = metin.replace(/^\uFEFF/, "").split(/\r?\n/).filter(s => s.trim());
+    if (satirlar.length < 2) throw new Error("CSV dosyasında veri satırı yok.");
+    const adaylar = [",", ";", "\t"];
+    const ayirac = adaylar.sort((a,b) => satirlar[0].split(b).length - satirlar[0].split(a).length)[0];
+    const basliklar = csvSatirAyir(satirlar[0], ayirac).map(s => s.trim().toLowerCase());
+    const indeks = (...adlar) => { for (const ad of adlar) { const i = basliklar.indexOf(ad); if (i >= 0) return i; } return -1; };
+    const ix = {
+      seq: indeks("seq", "sn"), x: indeks("rms_x_ug", "rms_x", "rms_x_mg"),
+      y: indeks("rms_y_ug", "rms_y", "rms_y_mg"), z: indeks("rms_z_ug", "rms_z", "rms_z_mg"),
+      mag: indeks("rms_mag_ug", "rms_mag", "rms_mag_mg"), peak: indeks("peak_ug", "peak", "peak_mg"),
+      crest: indeks("crest", "crest_x1000"), ov: indeks("overrun", "ov"), err: indeks("i2c_err", "err"),
+      valid: indeks("gecerli", "valid")
+    };
+    if ([ix.x, ix.y, ix.z, ix.mag, ix.peak].some(i => i < 0))
+      throw new Error("Gerekli RMS/PEAK sütunları bulunamadı.");
+    const sayi = v => { const n = Number(String(v ?? "").replace(",", ".")); return Number.isFinite(n) ? n : NaN; };
+    const ug = (i, alanlar) => basliklar[i].endsWith("_mg") ? sayi(alanlar[i]) * 1000 : sayi(alanlar[i]);
+    return satirlar.slice(1).map((satir, sira) => {
+      const a = csvSatirAyir(satir, ayirac);
+      if (ix.valid >= 0 && !["1", "ok", "true", "evet"].includes(String(a[ix.valid]).trim().toLowerCase())) return null;
+      const mag = ug(ix.mag, a); if (!Number.isFinite(mag)) return null;
+      const kod = mag / 1000 < ESIK1 ? 0 : mag / 1000 < ESIK2 ? 1 : 2;
+      let crest = ix.crest >= 0 ? sayi(a[ix.crest]) : ug(ix.peak, a) / mag;
+      if (ix.crest >= 0 && basliklar[ix.crest] === "crest_x1000") crest /= 1000;
+      return { seq: ix.seq >= 0 ? sayi(a[ix.seq]) : sira + 1,
+        rms_x_ug: ug(ix.x,a), rms_y_ug: ug(ix.y,a), rms_z_ug: ug(ix.z,a), rms_mag_ug: mag,
+        peak_ug: ug(ix.peak,a), crest, ov: ix.ov >= 0 ? sayi(a[ix.ov]) || 0 : 0,
+        err: ix.err >= 0 ? sayi(a[ix.err]) || 0 : 0, tahmin: kod, durum_kodu: kod, durum: KOD_AD[String(kod)] };
+    }).filter(Boolean);
+  }
+
+  function csvAdim() {
+    if (csvIndex >= csvSatirlari.length) {
+      if (csvTimer) clearInterval(csvTimer); csvTimer = null;
+      $("csvBtn").textContent = "Başka CSV seç";
+      $("kaynakYazi").textContent += " · tamamlandı";
+      return;
+    }
+    mesajIsle(csvSatirlari[csvIndex++]);
+  }
+
+  $("csvBtn").addEventListener("click", () => $("csvInput").click());
+  $("csvInput").addEventListener("change", async (e) => {
+    const dosya = e.target.files && e.target.files[0]; if (!dosya) return;
+    try {
+      akislariDurdur(); csvSatirlari = csvCoz(await dosya.text()); csvIndex = 0;
+      if (!csvSatirlari.length) throw new Error("Geçerli ölçüm satırı bulunamadı.");
+      gecmisiTemizle();
+      $("csvBtn").textContent = "CSV oynatılıyor";
+      $("kaynakYazi").textContent = `Kaynak: ${dosya.name} · ${csvSatirlari.length} pencere`;
+      csvAdim(); csvTimer = setInterval(csvAdim, 550);
+    } catch (hata) {
+      $("kaynakYazi").textContent = "CSV okunamadı: " + hata.message;
+      alert("CSV okunamadı. " + hata.message);
+    } finally { e.target.value = ""; }
+  });
+
   if (typeof mqtt === "undefined") {
     rozet("brokerNokta", "brokerYazi", "var(--kritik)", "MQTT kütüphanesi yüklenemedi");
     return;
@@ -286,6 +500,7 @@
       }
       return;
     }
+    if (demoTimer || csvTimer) return;
     try { mesajIsle(JSON.parse(metin)); } catch (e) { /* bozuk mesaj: yok say */ }
   });
 })();
